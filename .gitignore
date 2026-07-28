@@ -1,0 +1,13 @@
+# Dependencies (Will ignore in all sub-folders)
+node_modules/
+.pnpm-store/
+
+# Build Output
+dist/
+build/
+
+# Environment Variables
+.env
+
+# OS Files
+.DS_Store

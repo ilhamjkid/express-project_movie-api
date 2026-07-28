@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /* Target & Module System */
+    "target": "esnext" /* Specify ECMAScript target version */,
+    "module": "nodenext" /* Specify module code generation */,
+    "moduleResolution": "nodenext" /* Determine how modules get resolved */,
+
+    /* Modern Import Rules (Express v5 & Tsx Friendly) */
+    "rewriteRelativeImportExtensions": true /* Allow importing .ts extensions and map to .js at runtime */,
+    "verbatimModuleSyntax": true /* Do not eliminate type-only imports/exports */,
+    "isolatedModules": true /* Ensure each file can be safely transpiled independently */,
+    "moduleDetection": "force" /* Treat all files as local modules instead of global scripts */,
+    "noUncheckedSideEffectImports": true /* Error on missing or mistyped side-effect library imports */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules */,
+
+    /* Output & Compilation Optimization */
+    "noEmit": true /* Do not emit compiler output files; leave execution to tsx */,
+    "skipLibCheck": true /* Skip type checking of all declaration files to save memory */,
+
+    /* Strict Type-Checking Options */
+    "strict": true /* Enable all strict type-checking options */,
+    "noUncheckedIndexedAccess": true /* Add 'undefined' to any un-declared field in an index signature */,
+    "exactOptionalPropertyTypes": true /* Enforce strict definition for optional properties marked with (?) */,
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file */,
+    "noUnusedLocals": true /* Report errors on unused local variables */,
+    "noUnusedParameters": true /* Report errors on unused function parameters */
+  },
+  "include": ["src/**/*"] /* Specify an array of file patterns to include in the program */
+}
