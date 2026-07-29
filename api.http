@@ -1,5 +1,9 @@
-@baseUrl = http://localhost:3001
+@baseUrl = http://localhost:3001/api
 
 ###
 
-GET {{baseUrl}}/hello
+GET {{baseUrl}}/movies
+
+###
+
+POST {{baseUrl}}/movies

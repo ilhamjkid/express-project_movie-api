@@ -25,5 +25,8 @@
     "noUnusedLocals": true /* Report errors on unused local variables */,
     "noUnusedParameters": true /* Report errors on unused function parameters */
   },
-  "include": ["src/**/*"] /* Specify an array of file patterns to include in the program */
+  "include": [
+    "src/**/*",
+    "prisma.config.ts"
+  ] /* Specify an array of file patterns to include in the program */
 }

@@ -2,12 +2,19 @@
 node_modules/
 .pnpm-store/
 
-# Build Output
+# Build & Generated Code
 dist/
 build/
+src/generated/
 
 # Environment Variables
 .env
 
 # OS Files
 .DS_Store
+
+# Editor & AI Tooling Metadata
+.agents/
+.claude/
+.windsurf/
+skills-lock.json

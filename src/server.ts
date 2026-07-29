@@ -1,7 +1,6 @@
 import app from "./app.ts";
+import { env } from "./config/env.config.ts";
 
-const PORT = 3001;
-
-app.listen(PORT, () => {
-  console.info(`Server running on PORT ${PORT}`);
+app.listen(env.PORT, () => {
+  console.info(`Server running on PORT ${env.PORT}`);
 });

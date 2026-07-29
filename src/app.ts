@@ -1,9 +1,8 @@
 import express from "express";
+import movieRoutes from "./modules/movies/movie.routes.ts";
 
 const app = express();
 
-app.get("/hello", (_req, res) => {
-  res.send({ message: "Hello, World!" });
-});
+app.use("/api/movies", movieRoutes);
 
 export default app;
