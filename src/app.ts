@@ -1,5 +1,5 @@
 import express from "express";
-import movieRoutes from "./modules/movies/movie.routes.ts";
+import movieRoutes from "#modules/movies/movie.routes";
 
 const app = express();
 

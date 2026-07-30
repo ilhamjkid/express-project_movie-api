@@ -20,6 +20,14 @@
     }
   },
   "type": "module",
+  "imports": {
+    "#prisma/*": "./src/generated/prisma/*.ts",
+    "#config/*": "./src/config/*.ts",
+    "#middleware/*": "./src/middleware/*.ts",
+    "#modules/*": "./src/modules/*.ts",
+    "#utils/*": "./src/utils/*.ts",
+    "#app": "./src/app.ts"
+  },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",

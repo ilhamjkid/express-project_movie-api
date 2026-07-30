@@ -1,7 +1,7 @@
-import app from "./app.ts";
-import { prisma } from "./config/db.config.ts";
-import { env } from "./config/env.config.ts";
-import { handleGracefulShutdown } from "./utils/shutdown.util.ts";
+import app from "#app";
+import { prisma } from "#config/db.config";
+import { env } from "#config/env.config";
+import { handleGracefulShutdown } from "#utils/shutdown.util";
 
 async function bootstrap() {
   try {

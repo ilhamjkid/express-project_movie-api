@@ -1,5 +1,5 @@
 import { Server } from "http";
-import { prisma } from "../config/db.config.ts";
+import { prisma } from "#config/db.config";
 
 export function handleGracefulShutdown(server: Server) {
   let isShuttingDown = false;

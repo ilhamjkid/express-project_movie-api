@@ -23,7 +23,17 @@
     "exactOptionalPropertyTypes": true /* Enforce strict definition for optional properties marked with (?) */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file */,
     "noUnusedLocals": true /* Report errors on unused local variables */,
-    "noUnusedParameters": true /* Report errors on unused function parameters */
+    "noUnusedParameters": true /* Report errors on unused function parameters */,
+
+    /* Path Aliases Setup */
+    "paths": {
+      "#prisma/*": ["./src/generated/prisma/*"],
+      "#config/*": ["./src/config/*"],
+      "#middleware/*": ["./src/middleware/*"],
+      "#modules/*": ["./src/modules/*"],
+      "#utils/*": ["./src/utils/*"],
+      "#app": ["./src/app.ts"]
+    }
   },
   "include": [
     "src/**/*",
