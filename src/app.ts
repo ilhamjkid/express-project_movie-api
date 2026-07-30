@@ -1,8 +1,10 @@
 import express from "express";
-import movieRoutes from "#modules/movies/movie.routes";
+import { apiRouter } from "#routes";
 
 const app = express();
 
-app.use("/api/movies", movieRoutes);
+app.use(express.json());
+
+app.use("/api/v1", apiRouter);
 
 export default app;

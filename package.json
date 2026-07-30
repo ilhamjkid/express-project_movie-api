@@ -26,6 +26,7 @@
     "#middleware/*": "./src/middleware/*.ts",
     "#modules/*": "./src/modules/*.ts",
     "#utils/*": "./src/utils/*.ts",
+    "#routes": "./src/routes/index.ts",
     "#app": "./src/app.ts"
   },
   "devDependencies": {

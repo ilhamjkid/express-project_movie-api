@@ -32,6 +32,7 @@
       "#middleware/*": ["./src/middleware/*"],
       "#modules/*": ["./src/modules/*"],
       "#utils/*": ["./src/utils/*"],
+      "#routes": ["./src/routes/index.ts"],
       "#app": ["./src/app.ts"]
     }
   },
