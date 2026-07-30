@@ -11,3 +11,55 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id             String          @id @default(uuid())
+  movies         Movie[]
+  watchlistItems WatchlistItem[]
+  name           String
+  email          String          @unique
+  password       String
+  createdAt      DateTime        @default(now()) @map("created_at")
+
+  @@map("user")
+}
+
+model Movie {
+  id             String          @id @default(uuid())
+  creatorId      String          @map("creator_id")
+  creator        User            @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  watchlistItems WatchlistItem[]
+  title          String
+  overview       String?
+  releaseYear    Int             @map("release_year")
+  genres         String[]        @default([])
+  runtime        Int?
+  posterUrl      String?         @map("poster_url")
+  createdAt      DateTime        @default(now()) @map("created_at")
+
+  @@map("movie")
+}
+
+model WatchlistItem {
+  id        String          @id @default(uuid())
+  userId    String          @map("user_id")
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movieId   String          @map("movie_id")
+  movie     Movie           @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  status    WatchlistStatus @default(PLANNED)
+  rating    Int?
+  notes     String?
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  @@map("watchlist_item")
+}
+
+enum WatchlistStatus {
+  PLANNED
+  WATCHING
+  COMPLETED
+  DROPPED
+
+  @@map("watchlist_status")
+}
