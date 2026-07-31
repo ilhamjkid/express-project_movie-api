@@ -1,7 +1,7 @@
 import app from "#app";
 import { prisma } from "#config/db.config";
 import { env } from "#config/env.config";
-import { handleGracefulShutdown } from "#utils/shutdown.util";
+import { createShutdownHandler } from "#utils/shutdown.util";
 
 async function bootstrap() {
   try {
@@ -17,14 +17,14 @@ async function bootstrap() {
     console.log(`[SERVER] Running on http://localhost:${env.PORT} in ${env.NODE_ENV} mode.`);
   });
 
-  const shutdown = handleGracefulShutdown(server);
+  const shutdownHandler = createShutdownHandler(server);
 
-  process.on("SIGINT", () => shutdown("SIGINT"));
-  process.on("SIGTERM", () => shutdown("SIGTERM"));
-  process.on("uncaughtException", (error) => shutdown("uncaughtException", error));
+  process.on("SIGINT", () => shutdownHandler("SIGINT"));
+  process.on("SIGTERM", () => shutdownHandler("SIGTERM"));
+  process.on("uncaughtException", (error) => shutdownHandler("uncaughtException", error));
   process.on("unhandledRejection", (reason) => {
     const error = reason instanceof Error ? reason : new Error(String(reason));
-    shutdown("unhandledRejection", error);
+    shutdownHandler("unhandledRejection", error);
   });
 }
 
