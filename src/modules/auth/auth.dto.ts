@@ -25,3 +25,12 @@ export const registerSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "Password must contain at least 1 special character."),
 });
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const loginSchema = z.object({
+  email: z.string("Email is required.").min(1, "Email cannot be empty."),
+
+  password: z.string("Password is required.").min(1, "Password cannot be empty."),
+});
+export type LoginInput = z.infer<typeof loginSchema>;
+
+export type AuthJwtPayload = { userId: string };

@@ -17,6 +17,16 @@ Content-Type: application/json
 
 ###
 
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": ""
+}
+
+###
+
 GET {{baseUrl}}/movies
 
 ###

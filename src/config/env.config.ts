@@ -22,6 +22,8 @@ const EnvSchema = z.object({
     .string("DATABASE_URL is required.")
     .min(1, "DATABASE_URL cannot be empty.")
     .pipe(z.url("DATABASE_URL must be a valid connection URL.")),
+
+  JWT_SECRET_KEY: z.string("JWT_SECRET_KEY is required.").min(1, "JWT_SECRET_KEY cannot be empty."),
 });
 
 const parseResult = EnvSchema.safeParse(process.env);

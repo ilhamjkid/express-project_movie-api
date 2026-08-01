@@ -7,8 +7,17 @@ export class AuthController {
 
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const newUser = await this.authService.register(req.body);
-      sendSuccessResponse(res, "Registration Successful.", 201, newUser);
+      const result = await this.authService.register(req.body);
+      sendSuccessResponse(res, "Registration Successful.", 201, result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.authService.login(req.body);
+      sendSuccessResponse(res, "Login Successful.", 200, result);
     } catch (error) {
       next(error);
     }
