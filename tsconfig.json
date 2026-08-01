@@ -29,6 +29,7 @@
     "paths": {
       "#prisma/*": ["./src/generated/prisma/*"],
       "#config/*": ["./src/config/*"],
+      "#errors/*": ["./src/errors/*"],
       "#middleware/*": ["./src/middleware/*"],
       "#modules/*": ["./src/modules/*"],
       "#utils/*": ["./src/utils/*"],

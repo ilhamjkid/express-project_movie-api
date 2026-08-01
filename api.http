@@ -6,6 +6,17 @@ GET {{baseUrl}}/health
 
 ###
 
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "",
+  "password": ""
+}
+
+###
+
 GET {{baseUrl}}/movies
 
 ###
