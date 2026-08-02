@@ -26,9 +26,27 @@ export const globalErrorHandler = (
     err.statusCode === 400 &&
     "body" in err
   ) {
-    return res.status(err.statusCode).json({
+    return res.status(400).json({
       success: false,
       message: "Invalid JSON payload. Please check your request body syntax.",
+      data: null,
+      errors: null,
+    });
+  }
+
+  if (err.name === "TokenExpiredError") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized. Token has expired.",
+      data: null,
+      errors: null,
+    });
+  }
+
+  if (err.name === "JsonWebTokenError") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized. Invalid or tampered token.",
       data: null,
       errors: null,
     });
