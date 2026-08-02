@@ -32,3 +32,15 @@ GET {{baseUrl}}/movies
 ###
 
 POST {{baseUrl}}/movies
+
+###
+
+POST {{baseUrl}}/watchlists
+Content-Type: application/json
+
+{
+  "movieId": "",
+  "status": "",
+  "rating": null,
+  "notes": null
+}
