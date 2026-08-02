@@ -39,6 +39,7 @@
   },
   "include": [
     "src/**/*",
-    "prisma.config.ts"
+    "prisma.config.ts",
+    "prisma/seed.ts"
   ] /* Specify an array of file patterns to include in the program */
 }
