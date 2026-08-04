@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { Prisma } from "#prisma/client";
 import { AppError } from "#errors/app.error";
 
 export const notFoundHandler = (req: Request, _res: Response, next: NextFunction) => {
@@ -17,6 +18,52 @@ export const globalErrorHandler = (
       message: err.message,
       data: null,
       errors: err.errors ?? null,
+    });
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (err.code) {
+      case "P2002": {
+        const target = (err.meta?.target as string[])?.join(", ") ?? "field";
+        return res.status(409).json({
+          success: false,
+          message: `Unique constraint failed. Value for '${target}' already exists.`,
+          data: null,
+          errors: null,
+        });
+      }
+      case "P2025": {
+        return res.status(404).json({
+          success: false,
+          message: "Requested record was not found in the database.",
+          data: null,
+          errors: null,
+        });
+      }
+      case "P2003": {
+        return res.status(400).json({
+          success: false,
+          message: "Foreign key constraint failed. Related record does not exist.",
+          data: null,
+          errors: null,
+        });
+      }
+      default:
+        return res.status(400).json({
+          success: false,
+          message: `Database error occurred (${err.code}).`,
+          data: null,
+          errors: null,
+        });
+    }
+  }
+
+  if (err instanceof Prisma.PrismaClientValidationError) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid data payload provided to the database query.",
+      data: null,
+      errors: null,
     });
   }
 
