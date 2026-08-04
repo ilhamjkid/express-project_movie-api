@@ -1,14 +1,14 @@
-import type { PrismaClient } from "#prisma/client";
-import type { AuthJwtPayload, LoginInput, RegisterInput } from "#modules/auth/auth.dto";
-import type { Hash } from "#utils/hash.util";
-import type { Jwt } from "#utils/jwt.util";
+import type { PrismaClient, UserRole } from "#prisma/client";
+import type { LoginInput, RegisterInput } from "#modules/auth/auth.dto";
+import type { HashUtil } from "#utils/hash.util";
+import type { JwtUtil } from "#utils/jwt.util";
 import { AppError } from "#errors/app.error";
 
 export class AuthService {
   constructor(
     private prisma: PrismaClient,
-    private hash: Hash,
-    private jwt: Jwt,
+    private hashUtil: HashUtil,
+    private jwtUtil: JwtUtil,
   ) {}
 
   public register = async (registerInput: RegisterInput) => {
@@ -20,20 +20,22 @@ export class AuthService {
         formErrors: [],
         fieldErrors: { email: ["Email address has been used."] },
       };
-      throw new AppError("Registration Failed.", 400, errors);
+      throw new AppError("Registration failed.", 400, errors);
     }
 
-    const hashedPassword = await this.hash.hashPassword(registerInput.password);
-    const { id, name, email } = await this.prisma.user.create({
+    const hashedPassword = await this.hashUtil.hashPassword(registerInput.password);
+
+    const { id, name, email, role } = await this.prisma.user.create({
       data: {
         name: registerInput.name,
         email: registerInput.email,
         password: hashedPassword,
       },
     });
-    const token = this.jwt.signToken<AuthJwtPayload>({ userId: id });
 
-    return { user: { id, name, email }, token };
+    const { access, refresh } = await this.generateAndSaveTokens(id, role);
+
+    return { user: { id, name, email, role }, access, refresh };
   };
 
   public login = async (loginInput: LoginInput) => {
@@ -48,10 +50,10 @@ export class AuthService {
           password: ["Email or Password is incorrect."],
         },
       };
-      throw new AppError("Login Failed.", 401, errors);
+      throw new AppError("Login failed.", 401, errors);
     }
 
-    const isPasswordMatch = await this.hash.comparePassword(
+    const isPasswordMatch = await this.hashUtil.comparePassword(
       loginInput.password,
       userExists.password,
     );
@@ -63,18 +65,32 @@ export class AuthService {
           password: ["Email or Password is incorrect."],
         },
       };
-      throw new AppError("Login Failed.", 401, errors);
+      throw new AppError("Login failed.", 401, errors);
     }
 
-    const token = this.jwt.signToken<AuthJwtPayload>({ userId: userExists.id });
+    const { access, refresh } = await this.generateAndSaveTokens(userExists.id, userExists.role);
 
     return {
       user: {
         id: userExists.id,
         name: userExists.name,
         email: userExists.email,
+        role: userExists.role,
       },
-      token,
+      access,
+      refresh,
     };
+  };
+
+  private generateAndSaveTokens = async (userId: string, role: UserRole) => {
+    const payload = { userId, role };
+    const access = this.jwtUtil.signToken(payload, "accessToken");
+    const refresh = this.jwtUtil.signToken(payload, "refreshToken");
+
+    await this.prisma.refreshToken.create({
+      data: { userId, token: refresh.token, expiresAt: refresh.exp },
+    });
+
+    return { access, refresh };
   };
 }

@@ -32,5 +32,3 @@ export const loginSchema = z.object({
   password: z.string("Password is required.").min(1, "Password cannot be empty."),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
-
-export type AuthJwtPayload = { userId: string };

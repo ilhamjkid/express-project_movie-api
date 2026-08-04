@@ -1,7 +1,7 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { PrismaNeon } from "@prisma/adapter-neon";
-import { PrismaClient } from "#prisma/client";
+import { PrismaClient, type UserRole } from "#prisma/client";
 
 const connectionString = `${process.env.DIRECT_URL}`;
 const adapter = new PrismaNeon({ connectionString });
@@ -11,7 +11,7 @@ type User = {
   name: string;
   email: string;
   password: string;
-  role: "ADMIN" | "USER";
+  role: UserRole;
 };
 const users: User[] = [
   {

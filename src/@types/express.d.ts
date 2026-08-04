@@ -1,9 +1,12 @@
-import { AuthJwtPayload } from "#modules/auth/auth.dto";
+import type { UserRole } from "#prisma/client";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: AuthJwtPayload;
+      user?: {
+        userId: string;
+        role: UserRole;
+      };
     }
   }
 }
