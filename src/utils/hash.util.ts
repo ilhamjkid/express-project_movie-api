@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-export class Hash {
+export class HashUtil {
   private readonly saltRounds = 10;
 
   public hashPassword = async (password: string): Promise<string> => {
