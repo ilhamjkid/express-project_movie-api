@@ -1,5 +1,5 @@
 import type { PrismaClient } from "#prisma/client";
-import type { WatchlistInput } from "#modules/watchlists/watchlist.dto";
+import type { EditWatchlistInput, WatchlistInput } from "#modules/watchlists/watchlist.dto";
 import { AppError } from "#errors/app.error";
 
 export class WatchlistService {
@@ -21,9 +21,52 @@ export class WatchlistService {
     }
 
     const watchlistItem = await this.prisma.watchlistItem.create({
-      data: { userId, ...watchlistInput },
+      data: {
+        userId,
+        movieId: watchlistInput.movieId,
+        ...(watchlistInput.status !== undefined ? { status: watchlistInput.status } : {}),
+        ...(watchlistInput.rating !== undefined ? { rating: watchlistInput.rating } : {}),
+        ...(watchlistInput.notes !== undefined ? { notes: watchlistInput.notes } : {}),
+      },
     });
 
     return { watchlistItem };
+  };
+
+  public editWatchlistItem = async (
+    watchlistInput: EditWatchlistInput,
+    watchlistId: string,
+    userId: string,
+  ) => {
+    const watchlistExists = await this.prisma.watchlistItem.findFirst({
+      where: { id: watchlistId, userId },
+    });
+    if (!watchlistExists) {
+      throw new AppError("Failed to edit watchlist. Watchlist not found.", 404);
+    }
+
+    const watchlistItem = await this.prisma.watchlistItem.update({
+      where: { id: watchlistExists.id },
+      data: {
+        ...(watchlistInput.status !== undefined ? { status: watchlistInput.status } : {}),
+        ...(watchlistInput.rating !== undefined ? { rating: watchlistInput.rating } : {}),
+        ...(watchlistInput.notes !== undefined ? { notes: watchlistInput.notes } : {}),
+      },
+    });
+
+    return { watchlistItem };
+  };
+
+  public deleteWatchlistItem = async (watchlistId: string, userId: string) => {
+    const watchlistExists = await this.prisma.watchlistItem.findFirst({
+      where: { id: watchlistId, userId },
+    });
+    if (!watchlistExists) {
+      throw new AppError("Failed to delete watchlist. Watchlist not found.", 404);
+    }
+
+    await this.prisma.watchlistItem.delete({
+      where: { id: watchlistExists.id },
+    });
   };
 }

@@ -11,9 +11,9 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "",
-  "email": "",
-  "password": ""
+  "name": "Khaslana",
+  "email": "khaslana@hoyohsr.com",
+  "password": "#Khas123"
 }
 
 ###
@@ -23,8 +23,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "",
-  "password": ""
+  "email": "stelle@hoyohsr.com",
+  "password": "#Stelle1"
 }
 
 ###
@@ -43,8 +43,25 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.data.token}}
 
 {
-  "movieId": "",
-  "status": "",
+  "movieId": ""
+}
+
+###
+
+# @name editWatchlistItem
+PUT {{baseUrl}}/watchlists/:id
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.data.token}}
+
+{
+  "status": "COMPLETED",
   "rating": null,
   "notes": null
 }
+
+###
+
+# @name deleteWatchlistItem
+DELETE  {{baseUrl}}/watchlists/:id
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.data.token}}

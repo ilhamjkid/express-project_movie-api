@@ -16,4 +16,34 @@ export class WatchlistController {
       next(error);
     }
   };
+
+  public editWatchlistItem = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) throw new AppError("Failed to edit watchlist. Unauthorized User.", 401);
+      const watchlistId = req.params.id;
+      if (typeof watchlistId !== "string" || watchlistId.trim() === "") {
+        throw new AppError("Failed to edit watchlist. Invalid ID parameter.", 400);
+      }
+      const result = await this.watchlistService.editWatchlistItem(req.body, watchlistId, userId);
+      sendSuccessResponse(res, "Successfully edited watchlist.", 200, result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteWatchlistItem = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) throw new AppError("Failed to delete watchlist. Unauthorized User.", 401);
+      const watchlistId = req.params.id;
+      if (typeof watchlistId !== "string" || watchlistId.trim() === "") {
+        throw new AppError("Failed to delete watchlist. Invalid ID parameter.", 400);
+      }
+      await this.watchlistService.deleteWatchlistItem(watchlistId, userId);
+      sendSuccessResponse(res, "Successfully deleted watchlist.", 200);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
