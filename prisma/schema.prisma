@@ -14,14 +14,34 @@ datasource db {
 
 model User {
   id             String          @id @default(uuid())
+  refreshTokens  RefreshToken[]
   movies         Movie[]
   watchlistItems WatchlistItem[]
   name           String
   email          String          @unique
   password       String
+  role           UserRole        @default(USER)
   createdAt      DateTime        @default(now()) @map("created_at")
 
   @@map("user")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+
+  @@map("user_role")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("refresh_token")
 }
 
 model Movie {

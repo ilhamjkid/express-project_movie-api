@@ -7,11 +7,26 @@ const connectionString = `${process.env.DIRECT_URL}`;
 const adapter = new PrismaNeon({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-const user = {
-  name: "Stelle",
-  email: "stelle@hoyohsr.com",
-  password: "#Stelle1",
+type User = {
+  name: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "USER";
 };
+const users: User[] = [
+  {
+    name: "Stelle",
+    email: "stelle@hoyohsr.com",
+    password: "#Stelle1",
+    role: "ADMIN",
+  },
+  {
+    name: "Khaslana",
+    email: "khaslana@hoyohsr.com",
+    password: "#Khas123",
+    role: "ADMIN",
+  },
+];
 const movies = [
   {
     title: "The Matrix",
@@ -99,15 +114,25 @@ const movies = [
 
 async function main() {
   console.log("[DATABASE] Starting Seeding.");
-  const hashedPassword = await bcrypt.hash(user.password, 10);
-  const { id: creatorId, name } = await prisma.user.create({
-    data: { ...user, password: hashedPassword },
-  });
-  console.log(`[DATABASE] Added User: ${name}.`);
+
+  const addedUsers = [];
+  for (const user of users) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const addedUser = await prisma.user.create({
+      data: { ...user, password: hashedPassword },
+    });
+    console.log(`[DATABASE] Added User: ${addedUser.name}.`);
+    addedUsers.push(addedUser);
+  }
+
+  let movieAddedByIndex = 0;
   for (const movie of movies) {
+    const creatorId = addedUsers[movieAddedByIndex]?.id as string;
     await prisma.movie.create({ data: { ...movie, creatorId } });
     console.log(`[DATABASE] Added Movie: ${movie.title}.`);
+    movieAddedByIndex = movieAddedByIndex === 0 ? 1 : 0;
   }
+
   console.log("[DATABASE] Seeding Completed.");
 }
 
