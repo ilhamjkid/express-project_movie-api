@@ -22,7 +22,12 @@ export function authenticate(prisma: PrismaClient, jwtUtil: JwtUtil) {
       });
       if (!userExists) throw new AppError("Unauthorized. User no longer exists.", 401);
 
-      req.user = { userId: userExists.id, role: userExists.role };
+      req.user = {
+        userId: userExists.id,
+        name: userExists.name,
+        email: userExists.email,
+        role: userExists.role,
+      };
 
       next();
     } catch (error) {

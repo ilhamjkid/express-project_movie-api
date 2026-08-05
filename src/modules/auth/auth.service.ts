@@ -1,4 +1,4 @@
-import type { PrismaClient, UserRole } from "#prisma/client";
+import type { Prisma, PrismaClient, UserRole } from "#prisma/client";
 import type { LoginInput, RegisterInput } from "#modules/auth/auth.dto";
 import type { HashUtil } from "#utils/hash.util";
 import type { JwtUtil } from "#utils/jwt.util";
@@ -82,13 +82,56 @@ export class AuthService {
     };
   };
 
-  private generateAndSaveTokens = async (userId: string, role: UserRole) => {
+  public logout = async (incomingToken: string) => {
+    await this.prisma.refreshToken.deleteMany({
+      where: { token: incomingToken },
+    });
+  };
+
+  public refreshToken = async (incomingToken: string) => {
+    const refreshTokenExists = await this.prisma.refreshToken.findUnique({
+      where: { token: incomingToken },
+    });
+    if (!refreshTokenExists) {
+      throw new AppError("Unauthorized. Refresh token not found.", 401);
+    }
+    if (refreshTokenExists.expiresAt < new Date()) {
+      await this.prisma.refreshToken.delete({
+        where: { id: refreshTokenExists.id },
+      });
+      throw new AppError("Unauthorized. Refresh token has expired.", 401);
+    }
+
+    const { userId, role } = this.jwtUtil.verifyToken<{
+      userId: string;
+      role: UserRole;
+    }>(refreshTokenExists.token, "refreshToken");
+
+    const { access, refresh } = await this.prisma.$transaction(async (tx) => {
+      await tx.refreshToken.delete({ where: { id: refreshTokenExists.id } });
+      return await this.generateAndSaveTokens(userId, role, tx);
+    });
+
+    return { access, refresh };
+  };
+
+  private generateAndSaveTokens = async (
+    userId: string,
+    role: UserRole,
+    tx?: Prisma.TransactionClient,
+  ) => {
     const payload = { userId, role };
     const access = this.jwtUtil.signToken(payload, "accessToken");
     const refresh = this.jwtUtil.signToken(payload, "refreshToken");
 
-    await this.prisma.refreshToken.create({
-      data: { userId, token: refresh.token, expiresAt: refresh.exp },
+    const db = tx ?? this.prisma;
+
+    await db.refreshToken.create({
+      data: {
+        userId,
+        token: refresh.token,
+        expiresAt: refresh.exp,
+      },
     });
 
     return { access, refresh };
