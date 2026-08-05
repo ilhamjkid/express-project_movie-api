@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient, UserRole } from "#prisma/client";
-import type { LoginInput, RegisterInput } from "#modules/auth/auth.dto";
+import type { LoginBodyInput, RegisterBodyInput } from "#modules/auth/auth.dto";
 import type { HashUtil } from "#utils/hash.util";
 import type { JwtUtil } from "#utils/jwt.util";
 import { AppError } from "#errors/app.error";
@@ -11,9 +11,9 @@ export class AuthService {
     private jwtUtil: JwtUtil,
   ) {}
 
-  public register = async (registerInput: RegisterInput) => {
+  public register = async (inputBody: RegisterBodyInput) => {
     const userExists = await this.prisma.user.findUnique({
-      where: { email: registerInput.email },
+      where: { email: inputBody.email },
     });
     if (userExists) {
       const errors = {
@@ -23,12 +23,12 @@ export class AuthService {
       throw new AppError("Registration failed.", 400, errors);
     }
 
-    const hashedPassword = await this.hashUtil.hashPassword(registerInput.password);
+    const hashedPassword = await this.hashUtil.hashPassword(inputBody.password);
 
     const { id, name, email, role } = await this.prisma.user.create({
       data: {
-        name: registerInput.name,
-        email: registerInput.email,
+        name: inputBody.name,
+        email: inputBody.email,
         password: hashedPassword,
       },
     });
@@ -38,9 +38,9 @@ export class AuthService {
     return { user: { id, name, email, role }, access, refresh };
   };
 
-  public login = async (loginInput: LoginInput) => {
+  public login = async (inputBody: LoginBodyInput) => {
     const userExists = await this.prisma.user.findUnique({
-      where: { email: loginInput.email },
+      where: { email: inputBody.email },
     });
     if (!userExists) {
       const errors = {
@@ -54,7 +54,7 @@ export class AuthService {
     }
 
     const isPasswordMatch = await this.hashUtil.comparePassword(
-      loginInput.password,
+      inputBody.password,
       userExists.password,
     );
     if (!isPasswordMatch) {

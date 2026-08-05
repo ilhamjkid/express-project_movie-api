@@ -8,7 +8,8 @@ export class AuthController {
 
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { user, access, refresh } = await this.authService.register(req.body);
+      const { user, access, refresh } = await this.authService.register(req.validated.body);
+
       setCookie(res, "refreshToken", refresh.token, refresh.exp);
       success(res, "Registration successful.", 201, { user, accessToken: access.token });
     } catch (error) {
@@ -18,7 +19,8 @@ export class AuthController {
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { user, access, refresh } = await this.authService.login(req.body);
+      const { user, access, refresh } = await this.authService.login(req.validated.body);
+
       setCookie(res, "refreshToken", refresh.token, refresh.exp);
       success(res, "Login successful.", 200, { user, accessToken: access.token });
     } catch (error) {
@@ -30,6 +32,7 @@ export class AuthController {
     try {
       const token = req.cookies.refreshToken;
       if (token) await this.authService.logout(token);
+
       clearCookie(res, "refreshToken");
       success(res, "Logout successful.", 200);
     } catch (error) {
@@ -43,6 +46,7 @@ export class AuthController {
       const token = req.cookies.refreshToken;
       if (!token) throw new AppError("Unauthorized. Refresh token missing.", 401);
       const { access, refresh } = await this.authService.refreshToken(token);
+
       setCookie(res, "refreshToken", refresh.token, refresh.exp);
       success(res, "Refresh token successful.", 200, { accessToken: access.token });
     } catch (error) {
@@ -53,6 +57,7 @@ export class AuthController {
 
   public getMe = (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) return next(new AppError("Unauthorized. User not found.", 401));
+
     success(res, "Get user data successful.", 200, { user: req.user });
   };
 }

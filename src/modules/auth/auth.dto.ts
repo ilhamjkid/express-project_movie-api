@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const registerSchema = z.object({
+export const registerBodySchema = z.object({
   name: z
     .string("Name is required.")
     .min(1, "Name cannot be empty.")
@@ -24,11 +24,11 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least 1 number.")
     .regex(/[^A-Za-z0-9]/, "Password must contain at least 1 special character."),
 });
-export type RegisterInput = z.infer<typeof registerSchema>;
+export type RegisterBodyInput = z.infer<typeof registerBodySchema>;
 
-export const loginSchema = z.object({
+export const loginBodySchema = z.object({
   email: z.string("Email is required.").min(1, "Email cannot be empty."),
 
   password: z.string("Password is required.").min(1, "Password cannot be empty."),
 });
-export type LoginInput = z.infer<typeof loginSchema>;
+export type LoginBodyInput = z.infer<typeof loginBodySchema>;

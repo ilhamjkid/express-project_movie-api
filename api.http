@@ -1,67 +1,79 @@
 @baseUrl = http://localhost:3001/api/v1
+@contentType = application/json
 
-###
+# Save variables manually
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@watchlistId = YOUR_WATCHLIST_ID_HERE
+@movieId = YOUR_MOVIE_ID_HERE
 
-GET {{baseUrl}}/health
+### ----------------------------------------------------------------
+### AUTH MODULE
+### ----------------------------------------------------------------
 
-###
-
-# @name register
+### 1. Register User
 POST {{baseUrl}}/auth/register
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-  "name": "Khaslana",
-  "email": "khaslana@hoyohsr.com",
-  "password": "#Khas123"
+  "name": "Cyrene",
+  "email": "cyrene@hoyohsr.com",
+  "password": "#Rene321"
 }
 
-###
-
-# @name login
+### 2. Login User
 POST {{baseUrl}}/auth/login
-Content-Type: application/json
+Content-Type: {{contentType}}
 
 {
-  "email": "stelle@hoyohsr.com",
-  "password": "#Stelle1"
+  "email": "cyrene@hoyohsr.com",
+  "password": "#Rene321"
 }
 
-###
+### 3. Get Current User Profile (Me)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
 
-GET {{baseUrl}}/movies
+### 4. Refresh Token
+POST {{baseUrl}}/auth/refresh
 
-###
+### 5. Logout User
+POST {{baseUrl}}/auth/logout
 
-POST {{baseUrl}}/movies
+### ----------------------------------------------------------------
+### WATCHLIST MODULE (Requires Bearer Access Token)
+### ----------------------------------------------------------------
 
-###
-
-# @name addWatchlistItem
+### 1. Add Item to Watchlist
 POST {{baseUrl}}/watchlists
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.data.token}}
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
 
 {
-  "movieId": ""
+  "movieId": "{{movieId}}",
+  "status": "WATCHING",
+  "rating": 5,
+  "notes": "The movie is excellent!"
 }
 
-###
+### 2. Get Watchlist Items (Default Page 1, Limit 10)
+GET {{baseUrl}}/watchlists
+Authorization: Bearer {{accessToken}}
 
-# @name editWatchlistItem
-PUT {{baseUrl}}/watchlists/:id
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.data.token}}
+### 3. Get Watchlist Items with Filter & Pagination
+GET {{baseUrl}}/watchlists?status=WATCHING&page=1&limit=5
+Authorization: Bearer {{accessToken}}
+
+### 4. Edit Watchlist Item
+PUT {{baseUrl}}/watchlists/{{watchlistId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
 
 {
   "status": "COMPLETED",
-  "rating": null,
-  "notes": null
+  "rating": 5,
+  "notes": "Finished watching it."
 }
 
-###
-
-# @name deleteWatchlistItem
-DELETE  {{baseUrl}}/watchlists/:id
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.data.token}}
+### 5. Delete Watchlist Item
+DELETE {{baseUrl}}/watchlists/{{watchlistId}}
+Authorization: Bearer {{accessToken}}
