@@ -1,23 +1,32 @@
 import type { NextFunction, Request, Response } from "express";
-import type { AuthJwtPayload } from "#modules/auth/auth.dto";
+import type { PrismaClient, UserRole } from "#prisma/client";
+import type { JwtUtil } from "#utils/jwt.util";
 import { AppError } from "#errors/app.error";
-import { Jwt } from "#utils/jwt.util";
 
-export const authenticate = (req: Request, _res: Response, next: NextFunction) => {
-  try {
-    const authHeader = req.headers.authorization;
+export function authenticate(prisma: PrismaClient, jwtUtil: JwtUtil) {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new AppError("Unauthorized. Token is missing or invalid.", 401);
+      }
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new AppError("Unauthorized. Token is missing or invalid.", 401);
+      const accessToken = `${authHeader.split(" ")[1]}`;
+      const decodedPayload = jwtUtil.verifyToken<{
+        userId: string;
+        role: UserRole;
+      }>(accessToken, "accessToken");
+
+      const userExists = await prisma.user.findUnique({
+        where: { id: decodedPayload.userId },
+      });
+      if (!userExists) throw new AppError("Unauthorized. User no longer exists.", 401);
+
+      req.user = { userId: userExists.id, role: userExists.role };
+
+      next();
+    } catch (error) {
+      next(error);
     }
-
-    const token = `${authHeader.split(" ")[1]}`;
-    const decodedPayload = new Jwt().verifyToken<AuthJwtPayload>(token);
-
-    req.user = decodedPayload;
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+  };
+}
