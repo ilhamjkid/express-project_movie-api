@@ -3,8 +3,8 @@
 
 # Save variables manually
 @accessToken = YOUR_ACCESS_TOKEN_HERE
-@watchlistId = YOUR_WATCHLIST_ID_HERE
 @movieId = YOUR_MOVIE_ID_HERE
+@watchlistId = YOUR_WATCHLIST_ID_HERE
 
 ### ----------------------------------------------------------------
 ### AUTH MODULE
@@ -25,8 +25,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: {{contentType}}
 
 {
-  "email": "cyrene@hoyohsr.com",
-  "password": "#Rene321"
+  "email": "khaslana@hoyohsr.com",
+  "password": "#Khas123"
 }
 
 ### 3. Get Current User Profile (Me)
@@ -38,6 +38,52 @@ POST {{baseUrl}}/auth/refresh
 
 ### 5. Logout User
 POST {{baseUrl}}/auth/logout
+
+### ----------------------------------------------------------------
+### MOVIE MODULE (Requires Bearer Access Token)
+### ----------------------------------------------------------------
+
+### 1. Add Movie
+POST {{baseUrl}}/movies
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Thor: Ragnarok",
+  "overview": "Thor must escape a gladiator planet and reunite with Hulk to stop his sister, Hela, from destroying Asgard.",
+  "releaseYear": 2017,
+  "genres": ["ACTION", "ADVENTURE"],
+  "runtime": 130,
+  "posterUrl": "https://example.com/thor.jpg"
+}
+
+### 2. Get Movies
+GET {{baseUrl}}/movies
+Authorization: Bearer {{accessToken}}
+
+### 3. Get Movies with Filter & Pagination
+GET {{baseUrl}}/movies?search=&releaseYear=&genres=&page=&limit=
+Authorization: Bearer {{accessToken}}
+
+### 4. Get Movie Details
+GET {{baseUrl}}/movies/{{movieId}}
+Authorization: Bearer {{accessToken}}
+
+### 5. Edit Movie
+PUT {{baseUrl}}/movies/{{movieId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Thor: Love and Thunder",
+  "overview": "Thor teams up with his ex-girlfriend, Jane Foster—now wielding Mjolnir—to stop Gorr the God Butcher from killing all gods.",
+  "releaseYear": 2022,
+  "runtime": 119
+}
+
+### 6. Delete Movie
+DELETE {{baseUrl}}/movies/{{movieId}}
+Authorization: Bearer {{accessToken}}
 
 ### ----------------------------------------------------------------
 ### WATCHLIST MODULE (Requires Bearer Access Token)
