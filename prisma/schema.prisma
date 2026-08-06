@@ -46,8 +46,8 @@ model RefreshToken {
 
 model Movie {
   id             String          @id @default(uuid())
-  creatorId      String          @map("creator_id")
-  creator        User            @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  uploaderId     String          @map("uploader_id")
+  uploader       User            @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
   watchlistItems WatchlistItem[]
   title          String
   overview       String?

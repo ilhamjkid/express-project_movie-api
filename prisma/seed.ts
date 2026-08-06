@@ -127,8 +127,8 @@ async function main() {
 
   let movieAddedByIndex = 0;
   for (const movie of movies) {
-    const creatorId = addedUsers[movieAddedByIndex]?.id as string;
-    await prisma.movie.create({ data: { ...movie, creatorId } });
+    const uploaderId = addedUsers[movieAddedByIndex]?.id as string;
+    await prisma.movie.create({ data: { ...movie, uploaderId } });
     console.log(`[DATABASE] Added Movie: ${movie.title}.`);
     movieAddedByIndex = movieAddedByIndex === 0 ? 1 : 0;
   }
