@@ -36,8 +36,8 @@ Ensure you have the following installed or configured:
 ### 1. Clone & Install Dependencies
 
 ```bash
-git clone https://github.com/ilhamjkid/backend-course.git
-cd backend-course
+git clone https://github.com/ilhamjkid/express-project_movie-api.git
+cd express-project_movie-api
 pnpm install
 ```
 
