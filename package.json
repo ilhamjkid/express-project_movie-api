@@ -2,12 +2,11 @@
   "name": "backend-course",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate",
-    "start": "tsx src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,18 +20,43 @@
   },
   "type": "module",
   "imports": {
-    "#prisma/*": "./src/generated/prisma/*.ts",
-    "#config/*": "./src/config/*.ts",
-    "#errors/*": "./src/errors/*.ts",
-    "#middleware/*": "./src/middleware/*.ts",
-    "#modules/*": "./src/modules/*.ts",
-    "#utils/*": "./src/utils/*.ts",
-    "#routes": "./src/routes/index.ts",
-    "#app": "./src/app.ts"
+    "#prisma/*": {
+      "types": "./src/generated/prisma/*.ts",
+      "default": "./dist/generated/prisma/*.js"
+    },
+    "#config/*": {
+      "types": "./src/config/*.ts",
+      "default": "./dist/config/*.js"
+    },
+    "#errors/*": {
+      "types": "./src/errors/*.ts",
+      "default": "./dist/errors/*.js"
+    },
+    "#middleware/*": {
+      "types": "./src/middleware/*.ts",
+      "default": "./dist/middleware/*.js"
+    },
+    "#modules/*": {
+      "types": "./src/modules/*.ts",
+      "default": "./dist/modules/*.js"
+    },
+    "#utils/*": {
+      "types": "./src/utils/*.ts",
+      "default": "./dist/utils/*.js"
+    },
+    "#routes": {
+      "types": "./src/routes/index.ts",
+      "default": "./dist/routes/index.js"
+    },
+    "#app": {
+      "types": "./src/app.ts",
+      "default": "./dist/app.js"
+    }
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/ms": "^2.1.0",
     "@types/node": "^26.1.1",
     "prisma": "^7.9.1",
@@ -42,7 +66,6 @@
   "dependencies": {
     "@prisma/adapter-neon": "^7.9.1",
     "@prisma/client": "^7.9.1",
-    "@types/jsonwebtoken": "^9.0.10",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",

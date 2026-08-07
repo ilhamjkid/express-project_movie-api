@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json" /* Inherit base compiler options from primary config */,
+  "compilerOptions": {
+    "rootDir": "./src" /* Ensure output structure in /dist is strictly relative to /src */
+  },
+  "include": ["src/**/*"] /* Restrict production compilation solely to application source code */
+}
