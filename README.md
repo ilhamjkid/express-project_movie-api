@@ -1,6 +1,6 @@
 # Movie & Watchlist Management API
 
-A robust, type-safe RESTful API built with **Express.js**, **TypeScript**, **Prisma ORM**, and **Neon PostgreSQL**. The application features JWT-based authentication, Role-Based Access Control (RBAC), PostgreSQL Full-Text Search (FTS), and Watchlist tracking.
+A type-safe RESTful API built with **Express.js**, **TypeScript**, **Prisma ORM**, and **Neon PostgreSQL**. The application features JWT-based authentication, Role-Based Access Control (RBAC), PostgreSQL Full-Text Search (FTS), and Watchlist tracking.
 
 ## 🚀 Features
 
@@ -17,18 +17,17 @@ A robust, type-safe RESTful API built with **Express.js**, **TypeScript**, **Pri
 
 ## 🛠️ Tech Stack
 
-- **Runtime & Language**: Node.js, TypeScript
+- **Runtime & Package Manager**: Bun
 - **Framework**: Express.js
+- **Language**: TypeScript
 - **Database & ORM**: Neon PostgreSQL (Serverless), Prisma ORM
 - **Validation & Auth**: Zod, JSON Web Tokens (jsonwebtoken), Bcrypt
-- **Package Manager**: pnpm
 
 ## 📋 Prerequisites
 
 Ensure you have the following installed or configured:
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [pnpm](https://pnpm.io/) (`npm i -g pnpm`)
+- [Bun](https://bun.sh/) (v1.0 or higher)
 - A [Neon PostgreSQL](https://neon.tech/) database instance
 
 ## ⚙️ Getting Started
@@ -38,7 +37,7 @@ Ensure you have the following installed or configured:
 ```bash
 git clone https://github.com/ilhamjkid/express-project_movie-api.git
 cd express-project_movie-api
-pnpm install
+bun install
 ```
 
 ### 2. Configure Environment Variables
@@ -74,8 +73,8 @@ REFRESH_TOKEN_EXPIRES_IN=7d
 Run database migrations and generate the Prisma Client:
 
 ```bash
-pnpm prisma migrate dev
-pnpm prisma generate
+bunx prisma migrate dev
+bunx prisma generate
 ```
 
 ### 4. Run Development Server
@@ -83,7 +82,7 @@ pnpm prisma generate
 Start the development server with live-reloading:
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 The server will run on `http://localhost:3001` (or your configured `PORT`).
@@ -95,5 +94,3 @@ An `api.http` file is provided at the root of the project. You can use the **RES
 1. Register an `ADMIN` and a `USER` account.
 2. Obtain the `accessToken` via the Login endpoint.
 3. Set `@accessToken` variable in `api.http` to test authenticated routes.
-
----

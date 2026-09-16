@@ -4,20 +4,13 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc -p tsconfig.build.json",
-    "start": "node dist/server.js"
+    "dev": "bun --watch src/server.ts",
+    "build": "bunx prisma generate && tsc -p tsconfig.build.json",
+    "start": "bun dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.16.0",
-      "onFail": "download"
-    }
-  },
   "type": "module",
   "imports": {
     "#prisma/*": {
@@ -60,7 +53,6 @@
     "@types/ms": "^2.1.0",
     "@types/node": "^26.1.1",
     "prisma": "^7.9.1",
-    "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   },
   "dependencies": {
